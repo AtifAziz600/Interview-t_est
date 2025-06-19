@@ -4,7 +4,7 @@ import Button from '@/components/ui/button/Button.vue';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 
 interface Product {
     id: number;
@@ -26,6 +26,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
+const handleDelete = (id: number) => {
+    if (confirm('Do you want to delete a product?')) {
+        router.delete(route('products.destroy', { id }));
+    }
+};
 </script>
 
 <template>
@@ -64,7 +69,12 @@ const page = usePage();
                             <TableCell>{{ product.name }}</TableCell>
                             <TableCell>{{ product.category }}</TableCell>
                             <TableCell> {{ product.price }} </TableCell>
-                            <TableCell class="text-center"> Edit/Delete </TableCell>
+                            <TableCell class="space-x-2 text-center">
+                                <Link :href="route('products.edit', { id: product.id })">
+                                    <Button class="bg-green-500 text-white">Edit</Button>
+                                </Link>
+                                <Button class="bg-red-500 text-white" @click="handleDelete(product.id)">Delete</Button>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
